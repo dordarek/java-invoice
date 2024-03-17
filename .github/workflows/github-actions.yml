@@ -23,5 +23,5 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Checkstyl
-        run: mvn checkctyle:check
+      - name: Checkstyle
+        run: mvn checkstyle:check
