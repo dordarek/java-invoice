@@ -1,13 +1,13 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
-    private Map<Product, Integer> products = new HashMap<Product, Integer>();
+    private Map<Product, Integer> products = new LinkedHashMap<>();
     private static int invoiceCount;
     private final int number;
 
@@ -19,11 +19,30 @@ public class Invoice {
         addProduct(product, 1);
     }
 
+//    public void addProduct(Product product, Integer quantity) {
+//        if (product == null || quantity <= 0) {
+//            throw new IllegalArgumentException();
+//        } else {
+//            int quantityCount = 0;
+//            for (Product product1 : products.keySet()) {
+//                if (product.equals(product1)) {
+//                    ++quantityCount;
+//                    products.remove(product1);
+//                }
+//            }
+//            if (quantityCount == 0) {
+//                products.put(product, quantity);
+//            } else {
+//                products.put(product, quantity + quantityCount);
+//            }
+//        }
+//    }
+
     public void addProduct(Product product, Integer quantity) {
         if (product == null || quantity <= 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Product cannot be null and quantity must be greater than 0.");
         }
-        products.put(product, quantity);
+        products.merge(product, quantity, Integer::sum);
     }
 
     public BigDecimal getNetTotal() {
@@ -52,19 +71,15 @@ public class Invoice {
         return number;
     }
 
-    // metoda w fakturze ktora zwraca stringa
     public String getProductList() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Invoice Number: ").append(getNumber()).append("\n");
-        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-            Product product = entry.getKey();
-            Integer quantity = entry.getValue();
-            sb.append(product.getName())
-                    .append(", Quantity: ").append(quantity)
-                    .append(", Price: ").append(product.getPrice())
-                    .append("\n");
+        String invoice = "";
+        if (!products.isEmpty()) {
+            invoice = invoice.concat("Invoice Number: " + getNumber()).concat("\n");
+            for (Product product: products.keySet()) {
+            invoice = invoice.concat(product.getName()+", Quantity: " + products.get(product) + ", Price: " + product.getPrice() + "\n");
         }
-        sb.append("Total Items: ").append(products.size());
-        return sb.toString();
+            invoice = invoice.concat("Total Items: " + products.keySet().size());
+        }
+        return invoice;
     }
 }

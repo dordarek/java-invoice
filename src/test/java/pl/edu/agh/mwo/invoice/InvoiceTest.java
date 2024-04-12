@@ -145,18 +145,27 @@ public class InvoiceTest {
     @Test
     public void testGetProductListFromInvoice() {
         // 2x kubek - price: 10
-        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+        invoice.addProduct(new DairyProduct("Mleko", new BigDecimal("5")), 2);
         // 3x kozi serek - price: 30
         invoice.addProduct(new DairyProduct("Kozi Serek", new BigDecimal("10")), 3);
         // 1000x pinezka - price: 10
-        invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
+        invoice.addProduct(new DairyProduct("Śmietanka", new BigDecimal("0.01")), 1000);
         Assert.assertEquals(invoice.getProductList(), "Invoice Number: " + invoice.getNumber() + "\n" +
+                "Mleko, Quantity: 2, Price: 5\n" +
                 "Kozi Serek, Quantity: 3, Price: 10\n" +
-                "Kubek, Quantity: 2, Price: 5\n" +
-                "Pinezka, Quantity: 1000, Price: 0.01\n" +
+                "Śmietanka, Quantity: 1000, Price: 0.01\n" +
                 "Total Items: 3");
     }
-
+    @Test
+    public void testGetProductListWithDuplicatedProducts() {
+        Invoice invoice = new Invoice();
+        Product milk = new DairyProduct("Mleko", new BigDecimal("5"));
+        invoice.addProduct(milk, 2);
+        invoice.addProduct(milk, 2);
+        Assert.assertEquals("Invoice Number: " + invoice.getNumber() + "\n" +
+                "Mleko, Quantity: 4, Price: 5\n" +
+                "Total Items: 1", invoice.getProductList());
+    }
 
 
 }
