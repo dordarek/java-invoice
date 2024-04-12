@@ -19,28 +19,9 @@ public class Invoice {
         addProduct(product, 1);
     }
 
-//    public void addProduct(Product product, Integer quantity) {
-//        if (product == null || quantity <= 0) {
-//            throw new IllegalArgumentException();
-//        } else {
-//            int quantityCount = 0;
-//            for (Product product1 : products.keySet()) {
-//                if (product.equals(product1)) {
-//                    ++quantityCount;
-//                    products.remove(product1);
-//                }
-//            }
-//            if (quantityCount == 0) {
-//                products.put(product, quantity);
-//            } else {
-//                products.put(product, quantity + quantityCount);
-//            }
-//        }
-//    }
-
     public void addProduct(Product product, Integer quantity) {
         if (product == null || quantity <= 0) {
-            throw new IllegalArgumentException("Product cannot be null and quantity must be greater than 0.");
+            throw new IllegalArgumentException("Product cannot be null.");
         }
         products.merge(product, quantity, Integer::sum);
     }
@@ -75,9 +56,10 @@ public class Invoice {
         String invoice = "";
         if (!products.isEmpty()) {
             invoice = invoice.concat("Invoice Number: " + getNumber()).concat("\n");
-            for (Product product: products.keySet()) {
-            invoice = invoice.concat(product.getName()+", Quantity: " + products.get(product) + ", Price: " + product.getPrice() + "\n");
-        }
+            for (Product product : products.keySet()) {
+                invoice = invoice.concat(product.getName() + ", Quantity: "
+                        + products.get(product) + ", Price: " + product.getPrice() + "\n");
+            }
             invoice = invoice.concat("Total Items: " + products.keySet().size());
         }
         return invoice;
