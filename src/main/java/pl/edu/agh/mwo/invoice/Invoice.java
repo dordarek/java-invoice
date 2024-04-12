@@ -52,4 +52,18 @@ public class Invoice {
     }
 
     // metoda w fakturze ktora zwraca stringa
+    public String getProductList() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Invoice Number: ").append(getNumber()).append("\n");
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            Integer quantity = entry.getValue();
+            sb.append(product.getName())
+                    .append(", Quantity: ").append(quantity)
+                    .append(", Price: ").append(product.getPrice())
+                    .append("\n");
+        }
+        sb.append("Total Items: ").append(products.size());
+        return sb.toString();
+    }
 }

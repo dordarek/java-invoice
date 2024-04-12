@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
 import pl.edu.agh.mwo.invoice.product.DairyProduct;
 import pl.edu.agh.mwo.invoice.product.OtherProduct;
 import pl.edu.agh.mwo.invoice.product.Product;
@@ -129,17 +128,35 @@ public class InvoiceTest {
     @Test
     public void testInvoiceHasNumber (){
         int number = new Invoice().getNumber();
+        Assert.assertNotNull(number);
     }
     @Test
     public void testInvoiceNumberIsGraterThan0(){
-        int number1 = new Invoice().getNumber();
-        int number2 =new Invoice().getNumber();
+
         Assert.assertThat(new Invoice().getNumber(), Matchers.greaterThan(0));
       //  Assert.assertTrue(number1, Matchers.greaterThan(0));
     }
     @Test
-    public void getProductList(){
-
+    public void testNextInvoiceNUmberIsGraterThanPrevious() {
+        int number1 = new Invoice().getNumber();
+        int number2 =new Invoice().getNumber();
+        Assert.assertTrue(number1 < number2);
     }
+    @Test
+    public void testGetProductListFromInvoice() {
+        // 2x kubek - price: 10
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+        // 3x kozi serek - price: 30
+        invoice.addProduct(new DairyProduct("Kozi Serek", new BigDecimal("10")), 3);
+        // 1000x pinezka - price: 10
+        invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
+        Assert.assertEquals(invoice.getProductList(), "Invoice Number: " + invoice.getNumber() + "\n" +
+                "Kozi Serek, Quantity: 3, Price: 10\n" +
+                "Kubek, Quantity: 2, Price: 5\n" +
+                "Pinezka, Quantity: 1000, Price: 0.01\n" +
+                "Total Items: 3");
+    }
+
+
 
 }
