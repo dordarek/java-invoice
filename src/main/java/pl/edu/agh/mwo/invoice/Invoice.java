@@ -11,9 +11,10 @@ public class Invoice {
     private static int invoiceCount;
     private final int number;
 
-    public Invoice(){
-        this.number=++invoiceCount;
+    public Invoice() {
+        this.number = ++invoiceCount;
     }
+
     public void addProduct(Product product) {
         addProduct(product, 1);
     }
